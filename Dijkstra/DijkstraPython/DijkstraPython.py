@@ -1,4 +1,4 @@
-from Dijkstra import Node, load_nodes, nodes
+from Dijkstra import Node, load_nodes, nodes, dijkstra
 from threading import Thread
 import pygame, time
 pygame.init()
@@ -13,6 +13,7 @@ pygame.display.set_caption("Dijkstra")
 font = pygame.font.SysFont("couriernew", 20)
 
 load_nodes("nodes.json")
+path:list[str] = dijkstra(nodes, "A", "F")
 
 node_radius:int = 10
 
@@ -33,9 +34,13 @@ while running:
 		for neighbour_id in node.neighbours:
 			neighbour:Node = nodes[neighbour_id]
 			pygame.draw.line(window, (255, 255, 255), (node.x, node.y), (neighbour.x, neighbour.y), width=1)
+	pygame.draw.lines(window, (255, 0, 0), False, 
+				   [(nodes[node_id].x, nodes[node_id].y) for node_id in path], width=3)	#path
 	for node_id in nodes:	#Nodes
 		node:Node = nodes[node_id]
 		pygame.draw.circle(window, (255, 255, 255), (node.x, node.y), node_radius)
+		window.blit(font.render(node_id, 1, (0, 255, 0)), (node.x + node_radius, node.y - node_radius))
+	
 
 	pygame.display.update()
 
